@@ -1,29 +1,16 @@
-import ImagePlaceholder from '@/components/ImagePlaceholder';
-
-interface GalleryItem {
-  src?: string;
-  alt?: string;
-  label?: string;
-  caption?: string;
-}
-
 interface Gallery3UpProps {
-  images: [GalleryItem, GalleryItem, GalleryItem];
   /** Optional eyebrow-style heading centred above the gallery. */
   heading?: string;
-  /** Aspect ratio for all three images. Defaults to 4/5. */
-  aspect?: '4/5' | '3/4' | '4/3' | '16/9' | 'square';
+  /** Should be exactly three <GalleryItem> children. */
+  children: React.ReactNode;
 }
 
 /**
  * Three-image grid, full-width break.
- * Used for thematic showcases — e.g. "what you'll find here".
+ * Takes children (typically three <GalleryItem>) — primitive props only at the
+ * MDX boundary keeps next-mdx-remote v6 compileMDX happy at prerender time.
  */
-export default function Gallery3Up({
-  images,
-  heading,
-  aspect = '4/5',
-}: Gallery3UpProps) {
+export default function Gallery3Up({ heading, children }: Gallery3UpProps) {
   return (
     <section
       data-bleed="full"
@@ -37,37 +24,9 @@ export default function Gallery3Up({
           </div>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5">
-          {images.map((item, i) => (
-            <figure key={i}>
-              {item.src ? (
-                <div className={`w-full ${aspectMap[aspect]} relative overflow-hidden`}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.src}
-                    alt={item.alt ?? ''}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </div>
-              ) : (
-                <ImagePlaceholder label={item.label ?? `Image ${i + 1}`} aspect={aspect} />
-              )}
-              {item.caption && (
-                <figcaption className="mt-2 text-xs italic font-display text-muted text-center">
-                  {item.caption}
-                </figcaption>
-              )}
-            </figure>
-          ))}
+          {children}
         </div>
       </div>
     </section>
   );
 }
-
-const aspectMap = {
-  '4/5': 'aspect-[4/5]',
-  '3/4': 'aspect-[3/4]',
-  '4/3': 'aspect-[4/3]',
-  '16/9': 'aspect-[16/9]',
-  square: 'aspect-square',
-};

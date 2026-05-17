@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import HeroImage from '@/components/journal/HeroImage';
 import Gallery2Up from '@/components/journal/Gallery2Up';
+import GalleryItem from '@/components/journal/GalleryItem';
 import AtmosphereBreak from '@/components/journal/AtmosphereBreak';
 
 export const metadata: Metadata = {
@@ -111,17 +112,16 @@ export default function AboutPage() {
           </p>
         </Chapter>
 
-        <Gallery2Up
-          heading="The kitchens"
-          left={{
-            label: 'Pass at 5am — the first service of the day',
-            caption: 'Plantation Island, Mamanuca Group.',
-          }}
-          right={{
-            label: 'Brigade in motion — service mid-flight',
-            caption: 'A particular kind of choreography.',
-          }}
-        />
+        <Gallery2Up heading="The kitchens">
+          <GalleryItem
+            label="Pass at 5am — the first service of the day"
+            caption="Plantation Island, Mamanuca Group."
+          />
+          <GalleryItem
+            label="Brigade in motion — service mid-flight"
+            caption="A particular kind of choreography."
+          />
+        </Gallery2Up>
 
         <Chapter number="III" title="The Public Servant" years="2020–2023 · Wide Bay, Queensland Health">
           <p>

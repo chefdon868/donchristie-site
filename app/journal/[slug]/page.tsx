@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import { compileMDX } from 'next-mdx-remote/rsc';
 import {
   getAllSlugs,
   getPostBySlug,
@@ -13,6 +13,7 @@ import HeroImage from '@/components/journal/HeroImage';
 import InlineFigure from '@/components/journal/InlineFigure';
 import Gallery2Up from '@/components/journal/Gallery2Up';
 import Gallery3Up from '@/components/journal/Gallery3Up';
+import GalleryItem from '@/components/journal/GalleryItem';
 import AtmosphereBreak from '@/components/journal/AtmosphereBreak';
 
 export async function generateStaticParams() {
@@ -104,12 +105,19 @@ const mdxComponents = {
   InlineFigure,
   Gallery2Up,
   Gallery3Up,
+  GalleryItem,
   AtmosphereBreak,
 };
 
-export default function JournalPostPage({ params }: Props) {
+export default async function JournalPostPage({ params }: Props) {
   const post = getPostBySlug(params.slug);
   if (!post) notFound();
+
+  // next-mdx-remote v6 — compile to a React element on the server.
+  const { content: mdxContent } = await compileMDX({
+    source: post.content,
+    components: mdxComponents,
+  });
 
   const allPosts = getAllPosts();
   const related = allPosts
@@ -193,7 +201,7 @@ export default function JournalPostPage({ params }: Props) {
 
       {/* ARTICLE BODY (article-grid: text in reading column, image breaks full-width) */}
       <div className="article-grid pb-16">
-        <MDXRemote source={post.content} components={mdxComponents} />
+        {mdxContent}
       </div>
 
       {/* TAGS */}
